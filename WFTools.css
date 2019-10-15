@@ -1,0 +1,36 @@
+.header {
+	width: 100vw;
+	height: 50px;
+	background: #FFF;
+	color: #0b0c0d;
+	display: flex;
+	flex-flow: row nowrap;
+	align-items: center;
+	text-transform: uppercase;
+	justify-content: left;
+	margin: 0 auto;
+}
+
+.card-area .card-row-container {
+	display: flex;
+	width: 100%;
+	max-width: 2170px;
+}
+
+.h4 {
+	font-weight: bold;
+	font-size: 18px;
+}
+
+#street-view {
+    height: 480px;
+    margin-bottom: 5px;
+    width: 100%;
+}
+
+.button-star {
+	background-color: transparent;
+	border: 0px;
+	padding: 2px 2px 2px 2px;
+	outline: none;
+}
