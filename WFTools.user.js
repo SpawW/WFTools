@@ -2,12 +2,14 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.2.20191015.003
+// @version      0.0.2.20191015.002
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
 // @include      https://wayfarer.nianticlabs.com/captcha
 // @match        https://wayfarer.nianticlabs.com/captcha/*
+// @ include      https://wayfarer.nianticlabs.com
+// @ match        https://wayfarer.nianticlabs.com/*
 // @downloadURL     https://github.com/SpawW/WFTools/raw/master/WFTools.user.js
 // @updateURL       https://github.com/SpawW/WFTools/raw/master/WFTools.user.js
 // @grant        GM_getResourceText
@@ -18,7 +20,7 @@
 // @require      https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js
 // @require      https://cdn.bootcss.com/exif-js/2.3.0/exif.min.js
 // @require      https://code.jquery.com/jquery-1.11.1.min.js
-// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions2.js?ver=22
+// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions2.js?ver=24
 // ==/UserScript==
 
 /*
@@ -314,11 +316,9 @@ gmMS.setLimitInfo = function () {
             }
         }
         if (minutes == 0 || minutes == gmMS.options.autoBackHome) {
-            gmMS.notifyMe("Avoid Timeout","Timeout! AutoBack to home in 10 seconds!");
+            gmMS.notifyMe("Avoid Timeout","Timeout! AutoBack to home!");
             console.log('Auto back home');
-            setTimeout(function () {
-               window.location = '/';
-            }, 10000);
+            window.location = '/';
         }
         //console.log([minutes,minutes == 0,minutes == gmMS.options.autoBackHome,gmMS.options.autoBackHome]);
     }, gmMS.options.tickerInterval);
@@ -493,6 +493,7 @@ gmMS.shortCuts = function () {
 
 gmMS.init = function () {
     gmMS.toConsole('Start script...');
+
     gmMS.loadCSS('fontawesome','https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
     gmMS.loadCSS(gmMS.ScriptName,`${gmMS.baseURL}${gmMS.ScriptName}.css?a=${GM_info.script.version}`);
     gmMS.selectElements();
