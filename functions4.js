@@ -125,7 +125,7 @@ gmMS.toConsole = function (obj, show, color) {
     } else {
       out = obj;
     }
-    window.console.log(gmMS.ScriptName + " - " + out, color);
+    window.console.log(`%c ${gmMS.ScriptName} - ${out}`, color);
   }
 };
 
