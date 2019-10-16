@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.2.20191015.007
+// @version      0.0.2.20191015.008
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
@@ -289,6 +289,7 @@ gmMS.setMapOptions = function (map) {
         w.subController.map.setOptions(cloneInto(mapOptions, w));
     }
     if (map === undefined || map == 'streetview') {
+        w.subController.resetStreetView();
         w.subController.map2.setOptions(cloneInto(mapOptions, w));
     }
 }
@@ -488,6 +489,8 @@ gmMS.shortCuts = function () {
                     }
                     break;
             }
+            gmMS.moveObjects.whatIsInput.focus();
+            gmMS.moveObjects.whatIsInput.click();
             //console.log(`Key number ${e.which}`);
         }
     };
