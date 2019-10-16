@@ -85,7 +85,7 @@ gmMS.button = function (btnId, caption, btnClass, onClick, onDblClick, whatIs) {
 };
 
 gmMS.iconButton = function (btnId, title, btnClass, onClick, onDblClick, whatIs) {
-    let tmp = $(`<button onclick="${onClick}" id="${btnId}" class="btn btn-default ${btnClass}" whatis="${whatIs}"  data-tooltip="${title}" title="${title}">&nbsp;</button>`);
+    let tmp = $(`<button onclick="${onClick}" id="${btnId}" class="btn btn-default ${btnClass}" whatis="${whatIs}"  data-tooltip="${title}" title="${title}" tabIndex="-1">&nbsp;</button>`);
     return tmp;
 };
 
