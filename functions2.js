@@ -38,7 +38,7 @@ gmMS.randomStar = function (vote) {
 };
 
 gmMS.forceEvent = function (element, event) {
-    gmMS.toConsole(`Force event ${event} on element ${element}`,debugInfo.events);
+    gmMS.toConsole(`Force event ${event} on element ${element}`,debugConfig.events);
     if ("createEvent" in w.document) {
         gmMS.toConsole("Force Event 1",true);
         let evt = w.document.createEvent("HTMLEvents");
