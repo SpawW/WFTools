@@ -4,21 +4,23 @@ var debugConfig = {
   , "edit": false, "events": false
 };
 
-var localDBTables = ['statistics','history','candidates','customExtra','editCache'];
-
-var FastOPRData = (typeof FastOPRData == 'undefined' ? {} : FastOPRData);
-var inSync = [];
-var cacheKey = "pqp";
 //let player = document.querySelector('.navbar-form > div:nth-child(2) > span:nth-child(2)').innerText;
 //var inputWhatIs = w.document.querySelector("#WhatIsItController > div > div > input");
 var w = typeof unsafeWindow == "undefined" ? window : unsafeWindow;
 var gmMS = (typeof gmMS == 'undefined' ? {} : gmMS);
 document.gmMS = gmMS;
+
+gmMS.localDBTables = ['statistics','history','candidates','customExtra','editCache'];
+
+gmMS.FastOPRData = (typeof FastOPRData == 'undefined' ? {} : FastOPRData);
+gmMS.inSync = [];
+gmMS.cacheKey = "pqp";
+
 gmMS.ScriptName = 'WFTools';
 gmMS.baseURL = "https://www.everyz.org/FasT/";
 gmMS.angularReady = false;
 gmMS.debugInfo = "";
-gmMS.functionsVersion = 22;
+gmMS.functionsVersion = 25;
 //gmMS.tickerInterval = 2000;
 gmMS.options = {'autoNext': true, 'sleepAutoNext': 523,
                 'tickerInterval': 5000, 'autoBackHome': 8 ,
