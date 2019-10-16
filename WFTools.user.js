@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.2.20191014.004
+// @version      0.0.2.20191015.001
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
@@ -10,8 +10,8 @@
 // @match        https://wayfarer.nianticlabs.com/captcha/*
 // @ include      https://wayfarer.nianticlabs.com
 // @ match        https://wayfarer.nianticlabs.com/*
-// downloadURL     https://github.com/SpawW/WFTools/WFTools.user.js
-// updateURL       https://github.com/SpawW/WFTools/WFTools.user.js
+// downloadURL     https://github.com/SpawW/WFTools/raw/master/WFTools.user.js
+// updateURL       https://github.com/SpawW/WFTools/raw/master/WFTools.user.js
 // @grant        GM_getResourceText
 // @grant        GM_addStyle
 // @grant        GM_xmlhttpRequest
@@ -20,7 +20,7 @@
 // @require      https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js
 // @require      https://cdn.bootcss.com/exif-js/2.3.0/exif.min.js
 // @require      https://code.jquery.com/jquery-1.11.1.min.js
-// @require      https://raw.github.com/SpawW/WFTools/functions.js?ver=1
+// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions2.js?ver=21
 // ==/UserScript==
 
 /*
@@ -46,153 +46,6 @@
 
  */
 
-var debugConfig = {
-  "xsr": false, "xsrURL": true, "functionName": true
-  , "clearConsole": true  , "scriptLoad": false, "exif": false
-  , "edit": false, "events": false
-};
-
-var localDBTables = ['statistics','history','candidates','customExtra','editCache'];
-
-var FastOPRData = (typeof FastOPRData == 'undefined' ? {} : FastOPRData);
-var inSync = [];
-var cacheKey = "pqp";
-//let player = document.querySelector('.navbar-form > div:nth-child(2) > span:nth-child(2)').innerText;
-//var inputWhatIs = w.document.querySelector("#WhatIsItController > div > div > input");
-var w = typeof unsafeWindow == "undefined" ? window : unsafeWindow;
-var gmMS = (typeof gmMS == 'undefined' ? {} : gmMS);
-document.gmMS = gmMS;
-gmMS.ScriptName = 'WFTools';
-gmMS.baseURL = "https://everyz.org/FasT/";
-gmMS.angularReady = false;
-gmMS.debugInfo = "";
-//gmMS.tickerInterval = 2000;
-gmMS.options = {'autoNext': true, 'sleepAutoNext': 523,
-                'tickerInterval': 5000, 'autoBackHome': 8 ,
-                'autoSubmit': true, 'voteTimeout': 10, 'alertVote': false
-               };
-
-
-/* ------------------- Generic functions -------------------------------- */
-
-gmMS.randomStar = function (vote) {
-  let random = Math.random();
-  vote = parseInt (vote);
-  if (vote > 0) {
-    vote = vote + parseInt( (vote == 5 ? (random < 0.4 ? -1 : 0) : (random < 0.4 ? -1 : (random < 0.6 ? 0 : 1))));
-    return (vote < 1 ? 1 : vote).toString();
-  }
-  return vote;
-};
-
-gmMS.forceEvent = function (element, event) {
-    gmMS.toConsole("Force Event0",true);
-    if ("createEvent" in w.document) {
-        gmMS.toConsole("Force Event 1",true);
-        let evt = w.document.createEvent("HTMLEvents");
-        evt.initEvent(event, false, true);
-        element.dispatchEvent(evt);
-    }
-    else {
-        element.fireEvent("onchange");
-    }
-};
-
-gmMS.notifyMe = function (title,msg, icon) {
-  msg = `---=trustedOPR=--- [${gmMS.player}]\n${msg}`;
-  icon = icon || 'trusted.png';
-  icon = 'https://www.everyz.org/FasT/images/'+icon;
-  if (!("Notification" in window)) {
-    alert("This browser does not support system notifications");
-  } else if (Notification.permission === "granted") {
-    var notification = new Notification(title, {
-      icon: icon,
-      body: msg
-    });
-  } else if (Notification.permission !== 'denied') {
-    Notification.requestPermission(function (permission) {
-      if (permission === "granted") {
-        var notification = new Notification(title, {
-          icon: icon,
-          body: msg
-        });
-      }
-    });
-  }
-};
-
-gmMS.hideObject = function (ele) {
-    ele.classList.add('ng-hide');
-};
-
-gmMS.button = function (btnId, caption, btnClass, onClick, onDblClick, whatIs) {
-    //console.log(`<button class="btn ${btnClass}" id="${btnId}" onclick="${onClick}" onclick="${onClick}" ondblclick="${onDblClick}">${caption}</button>`);
-    let tmp = $(`<button class="btn ${btnClass}" id="${btnId}" onclick="${onClick}" whatis="${whatIs}" ondblclick="${onDblClick}">${caption}</button>`);
-    return tmp;
-};
-
-gmMS.iconButton = function (btnId, title, btnClass, onClick, onDblClick, whatIs) {
-    let tmp = $(`<button onclick="${onClick}" id="${btnId}" class="btn btn-default ${btnClass}" whatis="${whatIs}"  data-tooltip="${title}" title="${title}">&nbsp;</button>`);
-    return tmp;
-};
-
-gmMS.copy = function (ele) {
-    let messages = {
-        'question': `I need help. Please confirm if the portal candidate **${w.subController.pageData.title}** really exists?`,
-        'askAprove': `Guys , I know the area and I am confirming that the portal candidate **${w.subController.pageData.title}** EXISTS and request to you **VOTE 5 stars on it** ok?`,
-        'askReject': `Guys, the portal candidate **${w.subController.pageData.title}** is **INVALID** and request to you REFUSE with 1 star`
-    };
-    // standard way of copying
-    let textArea = document.createElement('textarea');
-    textArea.setAttribute('style', 'width:1px;border:0;opacity:0;');
-    document.body.appendChild(textArea);
-    textArea.value = messages[ele.id]
-        + `\nURL: ${w.subController.pageData.imageUrl}`
-        + `\nIntel: https://www.ingress.com/intel?ll=${w.ansController.lat},${w.ansController.lng}&z=17`
-        + `\nGoogle Maps: https://www.google.com/maps?q=@${w.ansController.lat},${w.ansController.lng}`
-        + ``
-    ;
-    textArea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textArea);
-    alert('Help text copied! Paste where you need it.');
-};
-
-gmMS.toConsole = function (obj, show) {
-  show = ((typeof show !== 'undefined') ? show : false);
-  if (show == true) {
-    var out = '';
-    if (obj !== null && typeof obj === 'object') {
-      for (var i in obj) {
-        out += i + ": " + obj[i] + "\n";
-      }
-    } else {
-      out = obj;
-    }
-    window.console.log(gmMS.ScriptName + " - " + out);
-  }
-};
-
-gmMS.loadCSS = function (cssId, url) {
-    gmMS.toConsole(`Loading ${cssId} from ${url}`,debugConfig.scriptLoad);
-    if (!document.getElementById(cssId))
-    {
-        var head  = document.getElementsByTagName('head')[0];
-        var link  = document.createElement('link');
-        link.id   = cssId;
-        link.rel  = 'stylesheet';
-        link.type = 'text/css';
-        link.href = url;
-        link.media = 'all';
-        head.appendChild(link);
-    }
-};
-
-gmMS.debugVar = function (name, value) {
-  var vAngDebug = true;
-  value = (typeof value == "undefined" ? "undefined" : value);
-  gmMS.toConsole(name + " - " + value, vAngDebug);
-};
 
 /* ------------------- Local Storage         -------------------------------- */
 
@@ -289,9 +142,6 @@ gmMS.standardButtons = function () {
         ,{'id': 'vote3.1', 'caption': '3.1', 'class': 'btn-outline-default', 'onclick': 'gmMS.setVote([3,4,3,3,2,1]);','whatis': ''}
         ,{'id': 'vote2', 'caption': '2', 'class': 'btn-warning', 'onclick': 'gmMS.setVote([2,2,1,1,1,2]);','whatis': ''}
         ,{'id': 'vote2.5', 'caption': '2.5', 'class': 'btn-outline-warning', 'onclick': 'gmMS.setVote([2,2,1,1,1,5]);','whatis': ''}
-//        ,{'id': 'vote1', 'caption': '1', 'class': 'btn-danger', 'onclick': 'gmMS.setVote([1,1,1,1,1,1]);'}
-        //,{'id': 'church', 'caption': 'Church', 'class': 'btn-success', 'onclick': 'gmMS.setVote([5,5,5,5,5,5],this);','whatis': 'church'}
-//        ["church", 5, 'church', 'According to the rules, this portal has to be approved.']
     ];
 
     for(let i = 0; i < btnList.length; i++){
@@ -515,8 +365,6 @@ gmMS.getAngular = function (retry) {
             var descriptionDiv = (typeof descriptionDiv == "undefined" ? w.document.getElementById("descriptionDiv") : descriptionDiv);
             w.ansController = w.$scope(descriptionDiv).answerCtrl;
             w.subController = w.$scope(descriptionDiv).subCtrl;
-            //w.ansModalDuplicated = w.$scope(descriptionDiv).answerCtrl2;
-            //w.ansModalNext = w.$scope(descriptionDiv).answerCtrl3;
             //console.log([w.ansController,w.subController]);
             if (w.subController.map !== undefined) {
                 gmMS.openFirstCheck();
