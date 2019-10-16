@@ -18,6 +18,7 @@ gmMS.ScriptName = 'WFTools';
 gmMS.baseURL = "https://www.everyz.org/FasT/";
 gmMS.angularReady = false;
 gmMS.debugInfo = "";
+gmMS.functionsVersion = 22;
 //gmMS.tickerInterval = 2000;
 gmMS.options = {'autoNext': true, 'sleepAutoNext': 523,
                 'tickerInterval': 5000, 'autoBackHome': 8 ,
