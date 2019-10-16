@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.2.20191015.005
+// @version      0.0.2.20191015.007
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
@@ -45,6 +45,7 @@
 
  */
 
+/* ------------------- Generic functions -------------------------------- */
 
 /* ------------------- Local Storage         -------------------------------- */
 
@@ -315,9 +316,11 @@ gmMS.setLimitInfo = function () {
             }
         }
         if (minutes == 0 || minutes == gmMS.options.autoBackHome) {
-            gmMS.notifyMe("Avoid Timeout","Timeout! AutoBack to home!");
+            gmMS.notifyMe("Avoid Timeout","Timeout! AutoBack to home in 10 seconds!");
             console.log('Auto back home');
-            window.location = '/';
+                setTimeout(function () {
+                    window.location = '/';
+                }, 10000);
         }
         //console.log([minutes,minutes == 0,minutes == gmMS.options.autoBackHome,gmMS.options.autoBackHome]);
     }, gmMS.options.tickerInterval);
@@ -407,8 +410,8 @@ gmMS.getAngular = function (retry) {
                 w.ansController.showLowQualityModal = function () {
                     console.log(`One Star Dialog`);
                     setTimeout(function () {
-                        //let btnRefuse = document.querySelector('html.ng-scope.hydrated body.is-authenticated.modal-open div.modal.fade.ng-isolate-scope.in div.modal-dialog.modal-custom1 div.modal-content div#low-quality-modal.ng-scope div.modal-body.modal-body-accordion div.button-container button.button-primary');
-                        //w.$scope(btnRefuse).answerCtrl2.openSubmissionCompleteModal = w.ansController.openSubmissionCompleteModal;
+                        let btnRefuse = document.querySelector('html.ng-scope.hydrated body.is-authenticated.modal-open div.modal.fade.ng-isolate-scope.in div.modal-dialog.modal-custom1 div.modal-content div#low-quality-modal.ng-scope div.modal-body.modal-body-accordion div.button-container button.button-primary');
+                        w.$scope(btnRefuse).answerCtrl2.openSubmissionCompleteModal = w.ansController.openSubmissionCompleteModal;
                         $('#sub-group-2').click();
                         setTimeout(function () {$('#MISMATCH').click();},200);
                         //gmMS.forceEvent(mismatchOption,'click');
