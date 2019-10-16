@@ -258,7 +258,7 @@ gmMS.setVote = function (vote, ele) {
     w.ansController.formData.safety      = gmMS.randomStar(vote[4].toString());
     w.ansController.formData.location    = vote[5].toString();
     if (ele !== undefined) {
-        console.log(ele);
+        //console.log(ele);
         gmMS.moveObjects.whatIsInput.value = ele.getAttribute('whatis').replace("+", "").replace("-", "").replace("_", " ");
         gmMS.moveObjects.whatIsInput.focus();
         gmMS.forceEvent(gmMS.moveObjects.whatIsInput,"change");
