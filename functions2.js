@@ -80,7 +80,7 @@ gmMS.hideObject = function (ele) {
 
 gmMS.button = function (btnId, caption, btnClass, onClick, onDblClick, whatIs) {
     //console.log(`<button class="btn ${btnClass}" id="${btnId}" onclick="${onClick}" onclick="${onClick}" ondblclick="${onDblClick}">${caption}</button>`);
-    let tmp = $(`<button class="btn ${btnClass}" id="${btnId}" onclick="${onClick}" whatis="${whatIs}" ondblclick="${onDblClick}">${caption}</button>`);
+    let tmp = $(`<button class="btn ${btnClass}" id="${btnId}" onclick="${onClick}" whatis="${whatIs}" ondblclick="${onDblClick}" tabIndex="-1">${caption}</button>`);
     return tmp;
 };
 
