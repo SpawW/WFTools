@@ -316,9 +316,11 @@ gmMS.setLimitInfo = function () {
             }
         }
         if (minutes == 0 || minutes == gmMS.options.autoBackHome) {
-            gmMS.notifyMe("Avoid Timeout","Timeout! AutoBack to home!");
+            gmMS.notifyMe("Avoid Timeout","Timeout! AutoBack to home in 10 seconds!");
             console.log('Auto back home');
-            window.location = '/';
+            setTimeout(function () {
+               window.location = '/';
+            }, 10000);
         }
         //console.log([minutes,minutes == 0,minutes == gmMS.options.autoBackHome,gmMS.options.autoBackHome]);
     }, gmMS.options.tickerInterval);
