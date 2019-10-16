@@ -15,7 +15,7 @@ var w = typeof unsafeWindow == "undefined" ? window : unsafeWindow;
 var gmMS = (typeof gmMS == 'undefined' ? {} : gmMS);
 document.gmMS = gmMS;
 gmMS.ScriptName = 'WFTools';
-gmMS.baseURL = "https://github.com/SpawW/WFTools/raw/master/";
+gmMS.baseURL = "https://gitcdn.link/repo/SpawW/WFTools/master/";
 gmMS.angularReady = false;
 gmMS.debugInfo = "";
 //gmMS.tickerInterval = 2000;
