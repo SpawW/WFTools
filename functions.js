@@ -127,8 +127,7 @@ gmMS.toConsole = function (obj, show) {
 };
 
 gmMS.loadCSS = function (cssId, url) {
-  gmMS.toConsole(`loadCSS ${cssId} ${url}`,debugConfig.functionName);
-  console.log('aqui');
+    gmMS.toConsole(`loadCSS ${cssId} ${url}`,debugConfig.functionName);
     gmMS.toConsole(`Loading ${cssId} from ${url}`,debugConfig.scriptLoad);
     if (!document.getElementById(cssId))
     {
