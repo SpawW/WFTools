@@ -133,7 +133,7 @@ gmMS.loadCSS = function (cssId, url) {
         var link  = document.createElement('link');
         link.id   = cssId;
         link.rel  = 'stylesheet';
-        link.type = 'text/plain';
+        link.type = 'text/css';
         link.href = url;
         link.media = 'all';
         head.appendChild(link);
