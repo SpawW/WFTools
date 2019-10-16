@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.2.20191015.008
+// @version      0.0.2.20191016.001
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
@@ -19,7 +19,7 @@
 // @require      https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js
 // @require      https://cdn.bootcss.com/exif-js/2.3.0/exif.min.js
 // @require      https://code.jquery.com/jquery-1.11.1.min.js
-// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions.js?ver=24
+// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions4.js?ver=71
 // ==/UserScript==
 
 /*
@@ -44,11 +44,38 @@
  SOFTWARE.
 
  */
+/* ------------------- Only Cosmetic to avoid warnings ----------------------- */
+var gmMS = (typeof gmMS == 'undefined' ? {} : gmMS);
+gmMS.FastOPRData = (typeof gmMS.FastOPRData == 'undefined' ? {} : gmMS.FastOPRData);
+var debugConfig = (typeof debugConfig == 'undefined' ? {} : debugConfig);
 
-/* ------------------- Generic functions -------------------------------- */
+/* ------------------- Generic functions     -------------------------------- */
+// Imported to functions.js
 
 /* ------------------- Local Storage         -------------------------------- */
+gmMS.localDBTables = [ 'statistics', 'history', 'candidates', 'customExtra', 'editCache'];
 
+gmMS.newStorageJSON = function (name) {
+  //gmMS.toConsole(`newStorageJSON ${name}`,debugConfig.functionName);
+  gmMS.FastOPRData[name] = localStorage.getItem(name);
+  gmMS.FastOPRData[name] = (gmMS.FastOPRData[name] === null ? [] : JSON.parse(gmMS.FastOPRData[name]));
+  gmMS.toConsole(`Number of records in ${name} cache - ${gmMS.FastOPRData[name].length}`,true,'background: #222; color: #bada55');
+};
+
+gmMS.saveStorageJSON = function (name) {
+  gmMS.toConsole(`saveStorageJSON ${name}`,debugConfig.functionName);
+  localStorage.setItem(name, JSON.stringify(FastOPRData[name]));
+}
+
+gmMS.saveDB = function () {
+  gmMS.localDBTables.forEach(gmMS.saveStorageJSON);
+  gmMS.toConsole(`DB Saved. Number of records in ${name} cache - ${gmMS.FastOPRData[name].length}`,true,'background: #220; color: #bada55');
+}
+
+gmMS.initDB = function (){
+  gmMS.toConsole(`initDB ${name}`,debugConfig.functionName);
+  gmMS.localDBTables.forEach(gmMS.newStorageJSON);
+}
 
 
 /* ------------------- Integration Functions -------------------------------- */
@@ -58,22 +85,22 @@ gmMS.selectElements = function () {
     gmMS.moveObjects = {};
 
     if (window.location.href.indexOf ("https://wayfarer.nianticlabs.com/captcha") != 0) {
-        gmMS.moveObjects['profile'] = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.header.ng-scope div.inner-container');
-        gmMS.moveObjects['logo'] = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.header.ng-scope div.inner-container');
-        gmMS.moveObjects['topBar'] = gmMS.moveObjects['logo'].parentElement;
-        gmMS.moveObjects['leftBar'] = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div.sidebar.ng-scope.hide-mobile');
+        gmMS.moveObjects.profile = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.header.ng-scope div.inner-container');
+        gmMS.moveObjects.logo = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.header.ng-scope div.inner-container');
+        gmMS.moveObjects.topBar = gmMS.moveObjects.logo.parentElement;
+        gmMS.moveObjects.leftBar = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div.sidebar.ng-scope.hide-mobile');
         gmMS.moveObjects.errorBox = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid.ng-submitted div div.error-message.error-message--submission');
     };
 
     if (window.location.href.indexOf ("https://wayfarer.nianticlabs.com/review") == 0) {
-            gmMS.moveObjects['duplicateList'] = document.getElementById('map-filmstrip');
-            gmMS.moveObjects['duplicateMap'] = document.getElementById('map');
-            gmMS.moveObjects['votePhoto'] = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#photo-card.card.card--expand div.card__footer div.five-stars');
-            gmMS.moveObjects['voteDescription'] = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#descriptionDiv.card.card--expand div.card__footer div.five-stars');
-            gmMS.moveObjects['voteHistCult'] = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#three-card-container.three-card-parent div#histcult-card.card.small-card div.card__footer div.five-stars');
-            gmMS.moveObjects['voteUniqueness'] = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#three-card-container.three-card-parent div#uniqueness-card.card.small-card.middle-card div.card__footer div.five-stars');
-            gmMS.moveObjects['voteSafety'] = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#three-card-container.three-card-parent div#safety-card.card.small-card div.card__footer div.five-stars');
-            gmMS.moveObjects['voteLocation'] = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#map-card.card.card--double-width div.card__footer div.five-stars');
+            gmMS.moveObjects.duplicateList = document.getElementById('map-filmstrip');
+            gmMS.moveObjects.duplicateMap = document.getElementById('map');
+            gmMS.moveObjects.votePhoto = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#photo-card.card.card--expand div.card__footer div.five-stars');
+            gmMS.moveObjects.voteDescription = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#descriptionDiv.card.card--expand div.card__footer div.five-stars');
+            gmMS.moveObjects.voteHistCult = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#three-card-container.three-card-parent div#histcult-card.card.small-card div.card__footer div.five-stars');
+            gmMS.moveObjects.voteUniqueness = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#three-card-container.three-card-parent div#uniqueness-card.card.small-card.middle-card div.card__footer div.five-stars');
+            gmMS.moveObjects.voteSafety = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#three-card-container.three-card-parent div#safety-card.card.small-card div.card__footer div.five-stars');
+            gmMS.moveObjects.voteLocation = document.querySelector('html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.card-row-container div#map-card.card.card--double-width div.card__footer div.five-stars');
             gmMS.moveObjects.descriptionVote = document.getElementsByClassName('card-header__description');
             gmMS.moveObjects.stars = document.getElementsByClassName('five-stars');
             gmMS.moveObjects.titles = document.getElementsByClassName('card-header__title');
@@ -96,7 +123,7 @@ gmMS.selectElements = function () {
 gmMS.changeScreen = function () {
     if (window.location.href.indexOf ("https://wayfarer.nianticlabs.com/captcha") != 0) {
         // Hide original left bar
-        gmMS.moveObjects['leftBar'].classList.add('ng-hide');
+        gmMS.moveObjects.leftBar.classList.add('ng-hide');
         // Add Options to topBar
         let topBarOptions = [];
         topBarOptions['/logout'] = ['power-off','Logout'];
@@ -106,9 +133,9 @@ gmMS.changeScreen = function () {
         topBarOptions['/review'] = ['picture-o','Review'];
         topBarOptions['/'] = ['home','Showcase'];
         for (var key in topBarOptions) {
-            gmMS.moveObjects['topBar'].insertAdjacentHTML("afterbegin", `<button onclick="window.location='${key}'" id="twMenu${topBarOptions[key][0]}" class="btn btn-outline-dark btn-lg fa fa-${topBarOptions[key][0]} black"  data-tooltip="${topBarOptions[key][1]}" title="${topBarOptions[key][1]}">&nbsp;</button>`);
+            gmMS.moveObjects.topBar.insertAdjacentHTML("afterbegin", `<button onclick="window.location='${key}'" id="twMenu${topBarOptions[key][0]}" class="btn btn-outline-dark btn-lg fa fa-${topBarOptions[key][0]} black"  data-tooltip="${topBarOptions[key][1]}" title="${topBarOptions[key][1]}">&nbsp;</button>`);
         }
-        gmMS.moveObjects['topBar'].appendChild(gmMS.moveObjects['profile']);
+        gmMS.moveObjects.topBar.appendChild(gmMS.moveObjects.profile);
         switch (window.location.href) {
             case "https://wayfarer.nianticlabs.com/review":
             case "https://wayfarer.nianticlabs.com/review#":
@@ -138,7 +165,7 @@ gmMS.standardButtons = function () {
     let btnList = [
         {'id': 'vote5', 'caption': '5', 'class': 'btn-success', 'onclick': 'gmMS.setVote([5,5,5,5,5,5]);','whatis': ''}
         ,{'id': 'vote4', 'caption': '4', 'class': 'btn-primary', 'onclick': 'gmMS.setVote([4,4,4,4,4,4]);','whatis': ''}
-        ,{'id': 'vote3', 'caption': '3', 'class': 'btn-default', 'onclick': 'gmMS.setVote([3,4,3,3,2,3]);','whatis': ''}
+        ,{'id': 'vote3', 'caption': '3', 'class': 'btn-default', 'onclick': 'gmMS.setVote([3,4,3,3,3,3]);','whatis': ''}
         ,{'id': 'vote3.1', 'caption': '3.1', 'class': 'btn-outline-default', 'onclick': 'gmMS.setVote([3,4,3,3,2,1]);','whatis': ''}
         ,{'id': 'vote2', 'caption': '2', 'class': 'btn-warning', 'onclick': 'gmMS.setVote([2,2,1,1,1,2]);','whatis': ''}
         ,{'id': 'vote2.5', 'caption': '2.5', 'class': 'btn-outline-warning', 'onclick': 'gmMS.setVote([2,2,1,1,1,5]);','whatis': ''}
@@ -368,8 +395,9 @@ gmMS.getAngular = function (retry) {
             var descriptionDiv = (typeof descriptionDiv == "undefined" ? w.document.getElementById("descriptionDiv") : descriptionDiv);
             w.ansController = w.$scope(descriptionDiv).answerCtrl;
             w.subController = w.$scope(descriptionDiv).subCtrl;
-            //console.log([w.ansController,w.subController]);
             if (w.subController.map !== undefined) {
+                console.log(['controlers',w.ansController,w.subController]);
+                gmMS.initDB();
                 gmMS.openFirstCheck();
                 // Hooks
                 w.subController.twCreateStreetView = w.subController.createStreetView;
@@ -483,7 +511,7 @@ gmMS.shortCuts = function () {
                 case 53:
                     $("#vote5")[0].onclick();
                     break;
-                case 13:
+                case 39:
                     if (w.ansController.readyToSubmit()) {
                         w.ansController.submitForm();
                     }
@@ -491,7 +519,9 @@ gmMS.shortCuts = function () {
             }
             gmMS.moveObjects.whatIsInput.focus();
             gmMS.moveObjects.whatIsInput.click();
-            //console.log(`Key number ${e.which}`);
+            var submitButton = document.querySelector('#submitDiv.submit-btn-container button.button-primary');
+            submitButton.focus();
+            console.log(`Key number ${e.which}`);
         }
     };
 };
