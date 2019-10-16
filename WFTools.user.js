@@ -2,14 +2,12 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.2.20191015.002
+// @version      0.0.2.20191015.003
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
 // @include      https://wayfarer.nianticlabs.com/captcha
 // @match        https://wayfarer.nianticlabs.com/captcha/*
-// @ include      https://wayfarer.nianticlabs.com
-// @ match        https://wayfarer.nianticlabs.com/*
 // @downloadURL     https://github.com/SpawW/WFTools/raw/master/WFTools.user.js
 // @updateURL       https://github.com/SpawW/WFTools/raw/master/WFTools.user.js
 // @grant        GM_getResourceText
