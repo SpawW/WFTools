@@ -12,7 +12,7 @@ document.gmMS = gmMS;
 
 gmMS.localDBTables = ['statistics','history','candidates','customExtra','editCache'];
 
-gmMS.FastOPRData = (typeof FastOPRData == 'undefined' ? {} : FastOPRData);
+gmMS.FastOPRData = (typeof gmMS.FastOPRData == 'undefined' ? {} : gmMS.FastOPRData);
 gmMS.inSync = [];
 gmMS.cacheKey = "pqp";
 
