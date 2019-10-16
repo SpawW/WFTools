@@ -38,7 +38,7 @@ gmMS.randomStar = function (vote) {
 };
 
 gmMS.forceEvent = function (element, event) {
-    gmMS.toConsole("Force Event0",true);
+    gmMS.toConsole(`Force event ${event} on element ${element}`,debugInfo.events);
     if ("createEvent" in w.document) {
         gmMS.toConsole("Force Event 1",true);
         let evt = w.document.createEvent("HTMLEvents");
@@ -126,6 +126,8 @@ gmMS.toConsole = function (obj, show) {
 };
 
 gmMS.loadCSS = function (cssId, url) {
+    gmMS.toConsole('getAngular',debugConfig.functionName);
+  console.log('aqui');
     gmMS.toConsole(`Loading ${cssId} from ${url}`,debugConfig.scriptLoad);
     if (!document.getElementById(cssId))
     {
