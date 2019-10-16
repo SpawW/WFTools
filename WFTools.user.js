@@ -20,7 +20,7 @@
 // @require      https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js
 // @require      https://cdn.bootcss.com/exif-js/2.3.0/exif.min.js
 // @require      https://code.jquery.com/jquery-1.11.1.min.js
-// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions2.js?ver=24
+// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions.js?ver=24
 // ==/UserScript==
 
 /*
