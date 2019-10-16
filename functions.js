@@ -15,7 +15,7 @@ var w = typeof unsafeWindow == "undefined" ? window : unsafeWindow;
 var gmMS = (typeof gmMS == 'undefined' ? {} : gmMS);
 document.gmMS = gmMS;
 gmMS.ScriptName = 'WFTools';
-gmMS.baseURL = "http://www.everyz.org/FasT/";
+gmMS.baseURL = "https://www.everyz.org/FasT/";
 gmMS.angularReady = false;
 gmMS.debugInfo = "";
 //gmMS.tickerInterval = 2000;
