@@ -126,7 +126,7 @@ gmMS.toConsole = function (obj, show) {
 };
 
 gmMS.loadCSS = function (cssId, url) {
-    gmMS.toConsole('getAngular',debugConfig.functionName);
+  gmMS.toConsole(`loadCSS ${cssId} ${url}`,debugConfig.functionName);
   console.log('aqui');
     gmMS.toConsole(`Loading ${cssId} from ${url}`,debugConfig.scriptLoad);
     if (!document.getElementById(cssId))
