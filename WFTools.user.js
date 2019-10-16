@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.2.20191014.004
+// @version      0.0.2.20191015.002
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
@@ -20,7 +20,7 @@
 // @require      https://cdn.bootcss.com/zepto/1.2.0/zepto.min.js
 // @require      https://cdn.bootcss.com/exif-js/2.3.0/exif.min.js
 // @require      https://code.jquery.com/jquery-1.11.1.min.js
-// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions2.js?ver=21
+// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions2.js?ver=22
 // ==/UserScript==
 
 /*
