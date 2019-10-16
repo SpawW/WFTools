@@ -113,8 +113,9 @@ gmMS.copy = function (ele) {
     alert('Help text copied! Paste where you need it.');
 };
 
-gmMS.toConsole = function (obj, show) {
+gmMS.toConsole = function (obj, show, color) {
   show = ((typeof show !== 'undefined') ? show : false);
+  color = ((typeof color !== 'undefined') ? color : '');
   if (show == true) {
     var out = '';
     if (obj !== null && typeof obj === 'object') {
@@ -124,7 +125,7 @@ gmMS.toConsole = function (obj, show) {
     } else {
       out = obj;
     }
-    window.console.log(gmMS.ScriptName + " - " + out);
+    window.console.log(gmMS.ScriptName + " - " + out, color);
   }
 };
 
