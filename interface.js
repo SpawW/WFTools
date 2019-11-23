@@ -67,13 +67,13 @@ gmMS.changeScreen = function () {
     if (window.location.href.indexOf ("https://wayfarer.nianticlabs.com/captcha") != 0) {
         // Statistcs
         gmMS.moveObjects.topBar.insertAdjacentHTML("afterbegin", `<div id="twStatistics" width="100px"></div>`);
-        let badges = ["success","primary","info","warning","danger","danger"]; //,"dark","secondary"
+        let badges = ["success","primary","info","warning","danger","outline-danger"]; //,"dark","secondary"
         //let hints =  ["5* vote","secondary","success","danger","warning","info","light","dark"];
         let stars = [5,4,3,2,1,0];
         console.log(['aqui',gmMS.FastOPRData,gmMS.FastOPRData.statistics.length]);
         let lastRecord = gmMS.FastOPRData.statistics.length-1;
         for (var id in stars ) {
-            $('#twStatistics' ).html ($('#twStatistics' ).html()+`<span class="rounded-circle btn btn-${badges[id]}" title="Total votes with ${stars[id]}*">${gmMS.FastOPRData.statistics[lastRecord].resume[stars[id]]}</span>`);
+            $('#twStatistics' ).html ($('#twStatistics' ).html()+`<span class="rounded-circle btn btn-${badges[id]} " title="Total votes with ${stars[id]}*">${gmMS.FastOPRData.statistics[lastRecord].resume[stars[id]]}</span>`);
         }
         // Hide original left bar
         gmMS.moveObjects.leftBar.classList.add('ng-hide');
@@ -223,34 +223,5 @@ gmMS.changeScreenVote = function () {
     }
     catch(err) {
         gmMS.toConsole(err.message,true);
-    }
-};
-
-gmMS.setMapOptions = function (map) {
-    gmMS.toConsole('setMapOptions'+ (map === undefined ? '' : ` - ${map}`),debugConfig.functionName);
-    const mapOptions = {center:new google.maps.LatLng(w.ansController.lat,w.ansController.lng), scrollwheel: true, gestureHandling: "greedy", zoom:20,mapTypeId: google.maps.MapTypeId.HYBRID};
-    if (map === undefined || map == 'duplicated') {
-        w.subController.map.setOptions(cloneInto(mapOptions, w));
-    }
-    if (map === undefined || map == 'streetview') {
-        w.subController.resetStreetView();
-        w.subController.map2.setOptions(cloneInto(mapOptions, w));
-    }
-}
-
-gmMS.openFirstCheck = function () {
-    try {
-        const e = w.document.querySelector("#map-filmstrip > ul > li:nth-child(1) > img");
-        if (e !== null) {
-            setTimeout(function () {
-                e.click();
-            }, 500);
-        }
-        gmMS.moveObjects.whatIsInput = (typeof gmMS.moveObjects.whatIsInput == "undefined" ? $("#category-input")[0] : gmMS.moveObjects.whatIsInput);
-        setTimeout(function () {
-            gmMS.moveObjects.whatIsInput.focus();
-            gmMS.moveObjects.whatIsInput.click();
-        }, 500);
-    } catch (err) {
     }
 };
