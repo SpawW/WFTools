@@ -82,8 +82,8 @@ gmMS.localCache = function (method) {
                 tmp.userId = (/(?:\<img src=")(.*?)(?:" id)/gm).exec(data)[0];
                 tmp.userStatus = (/(?:<div class=")(.*?)(?:" id)/gm).exec(data)[0];
                 tmp.tmp = (/(?:<span class="stats-right">)(.*?)(?:<\/span>)/gm).exec(data);
-                console.log(tmp.tmp);
-                console.log(['userid',gmMS.FastOPRData.statistics]);
+                //console.log(tmp.tmp);
+                //console.log(['userid',gmMS.FastOPRData.statistics]);
 
                 // filter vote statistics
 //                const regex = ;
@@ -132,7 +132,7 @@ gmMS.saveVote = function() {
             'location': w.ansController.formData.location,
         }
     };
-    console.clear();
+    //console.clear();
     //console.log(['wftVote',wftVote,w.ansController,w.subController]);
     gmMS.FastOPRData.candidates.push(wftVote);
     gmMS.saveStatistics(wftVote);
