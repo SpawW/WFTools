@@ -79,3 +79,49 @@ gmMS.localCache = function (method) {
             break;
     }
 }
+
+gmMS.saveVote = function() {
+    gmMS.toConsole('saveVote',debugConfig.functionName);
+    let fullVote = w.subController.pageData;
+    let wftVote = {
+        'reviewType': w.subController.reviewType,
+        'description': fullVote.description,
+        'imageUrl': fullVote.imageUrl,
+        'supportingImageUrl': fullVote.supportingImageUrl,
+        'lat': fullVote.lat,
+        'lng': fullVote.lng,
+        'statement': fullVote.statement,
+        'title': fullVote.title,
+        'edit': {
+            'descriptions': fullVote.descriptionEdits,
+            'locations': fullVote.locationEdits,
+        },
+        'vote': {
+            'quality': w.ansController.formData.quality,
+            'description': w.ansController.formData.description,
+            'cultural': w.ansController.formData.cultural,
+            'uniqueness': w.ansController.formData.uniqueness,
+            'safety': w.ansController.formData.safety,
+            'location': w.ansController.formData.location,
+        }
+    };
+    console.clear();
+    //console.log(['wftVote',wftVote,w.ansController,w.subController]);
+    gmMS.FastOPRData.candidates.push(wftVote);
+    gmMS.saveStatistics(wftVote);
+    gmMS.saveDB();
+
+}
+
+gmMS.saveStatistics = function (wftVote) {
+    gmMS.toConsole('saveStatistics',debugConfig.functionName);
+    let lastRecord = gmMS.FastOPRData.statistics.length-1;
+    if (wftVote.reviewType == "NEW") {
+        gmMS.FastOPRData.statistics[lastRecord].resume[(wftVote.vote.quality == "" ? 0 : wftVote.vote.quality)] += 1;
+        console.log(['new vote',wftVote.vote,gmMS.FastOPRData.statistics[lastRecord]]);
+    } else {
+        gmMS.FastOPRData.statistics[lastRecord].resume[7] += 1;
+        console.log(['edit',wftVote.vote,gmMS.FastOPRData.statistics[lastRecord]]);
+    }
+}
+
