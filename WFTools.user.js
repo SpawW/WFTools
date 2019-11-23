@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.4.20191123.007
+// @version      0.0.4.20191123.008
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
@@ -20,9 +20,9 @@
 // @require      https://cdn.bootcss.com/exif-js/2.3.0/exif.min.js
 // @require      https://code.jquery.com/jquery-1.12.4.js
 // @require      https://code.jquery.com/ui/1.12.1/jquery-ui.js
-// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions4.js?ver=71
-// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/database.js?ver=2
-// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/interface.js?ver=2
+// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/functions3.js?ver=71
+// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/database3.js?ver=2
+// @require      https://raw.githubusercontent.com/SpawW/WFTools/master/interface3.js?ver=2
 // ==/UserScript==
 //https://code.jquery.com/jquery-1.11.1.min.js
 
@@ -341,7 +341,7 @@ gmMS.init = function () {
     gmMS.loadCSS(gmMS.ScriptName,`${gmMS.baseURL}${gmMS.ScriptName}.css?a=${GM_info.script.version}3`);
     gmMS.initDB();
     gmMS.selectElements();
-    //gmMS.options = gmMS.FastOPRData.options;
+    gmMS.options = gmMS.FastOPRData.options;
 };
 
 gmMS.addPopUp = function () {
@@ -358,6 +358,9 @@ gmMS.addPopUp = function () {
 </div>
   </div>
 </div>`);
+    $( "#twDialog" ).on( "dialogopen", function( event, ui ) {
+        $('#twAutoNext').checked = gmMS.options.autoNext;
+    });
     document.getElementsByClassName('niantic-wayfarer-logo')[0].onclick = function() {
         $( "#twDialog" ).dialog({
             resizable: false,
@@ -408,7 +411,7 @@ gmMS.addPopUp = function () {
     }
     gmMS.init ();
     // Temporary disable autoNext
-    gmMS.options.autoNext = false;
+    //gmMS.options.autoNext = false;
 })();
 /*
 
