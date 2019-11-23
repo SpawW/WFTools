@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.4.20191123.006
+// @version      0.0.4.20191123.007
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
