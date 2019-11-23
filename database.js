@@ -46,7 +46,7 @@ gmMS.initStatistic = function (date) {
 
 gmMS.initDB = function (){
     gmMS.toConsole(`initDB ${name}`,debugConfig.functionName);
-    gmMS.localDBTables = [ 'statistics', 'history', 'candidates', 'customExtra', 'editCache'];
+    gmMS.localDBTables = [ 'statistics', 'history', 'candidates', 'customExtra', 'editCache', 'options'];
     gmMS.localDBTables.forEach(gmMS.newStorageJSON);
     let statisticCount = gmMS.FastOPRData.statistics.length;
     gmMS.today = new Date();
