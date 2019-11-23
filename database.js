@@ -24,30 +24,25 @@
 
 */
 
-
 gmMS.newStorageJSON = function (name) {
-  //gmMS.toConsole(`newStorageJSON ${name}`,debugConfig.functionName);
   gmMS.FastOPRData[name] = localStorage.getItem(name);
   gmMS.FastOPRData[name] = (gmMS.FastOPRData[name] === null ? [] : JSON.parse(gmMS.FastOPRData[name]));
   gmMS.toConsole(`Number of records in ${name} cache - ${gmMS.FastOPRData[name].length}`,true,'background: #222; color: #bada55');
 };
 
 gmMS.saveStorageJSON = function (name) {
-  //gmMS.toConsole(`saveStorageJSON ${name}/${gmMS.FastOPRData[name].length}`,debugConfig.functionName);
   localStorage.setItem(name, JSON.stringify(gmMS.FastOPRData[name]));
-  //console.log([`Debug ${name}`,gmMS.FastOPRData[name]]);
-}
+};
 
 gmMS.saveDB = function () {
   gmMS.localDBTables.forEach(gmMS.saveStorageJSON);
   gmMS.toConsole(`DB Saved.`,true,'background: #220; color: #bada55');
-}
+};
 
 gmMS.initStatistic = function (date) {
     // Edits in resume[7]
     gmMS.FastOPRData.statistics.push ({'date': date, 'voteInvalid': 0, 'voteDuplicate': 0, 'voteValid': 0, 'voteEdit': 0, 'resume': [0,0,0,0,0,0,0,0]});
-//    console.log(['debug statistics',gmMS.FastOPRData.statistics,gmMS.FastOPRData.statistics[gmMS.date]]);
-}
+};
 
 gmMS.initDB = function (){
     gmMS.toConsole(`initDB ${name}`,debugConfig.functionName);
@@ -69,7 +64,7 @@ gmMS.initDB = function (){
             gmMS.toConsole ('Statistic day already initialized',true);
         }
     }
-}
+};
 
 gmMS.localCache = function (method) {
     switch (method) {
@@ -82,30 +77,10 @@ gmMS.localCache = function (method) {
                 tmp.userId = (/(?:\<img src=")(.*?)(?:" id)/gm).exec(data)[0];
                 tmp.userStatus = (/(?:<div class=")(.*?)(?:" id)/gm).exec(data)[0];
                 tmp.tmp = (/(?:<span class="stats-right">)(.*?)(?:<\/span>)/gm).exec(data);
-                //console.log(tmp.tmp);
-                //console.log(['userid',gmMS.FastOPRData.statistics]);
-
-                // filter vote statistics
-//                const regex = ;
-                //m = (/(?:\<div id="col-contain">)((?:.*\r?\n?)*)/gm).exec(data);
-                //console.log(m);
-                /*
-                while (m !== null) {
-                    // This is necessary to avoid infinite loops with zero-width matches
-                    if (m.index === regex.lastIndex) {
-                        regex.lastIndex++;
-                    }
-
-                    // The result can be accessed through the `m`-variable.
-                    m.forEach((match, groupIndex) => {
-                        console.log(`Found match, group ${groupIndex}: ${match}`);
-                    });
-                }*/
-                //               console.log([ "Profile data",data]);
             });
             break;
     }
-}
+};
 
 gmMS.saveVote = function() {
     gmMS.toConsole('saveVote',debugConfig.functionName);
@@ -132,13 +107,10 @@ gmMS.saveVote = function() {
             'location': w.ansController.formData.location,
         }
     };
-    //console.clear();
-    //console.log(['wftVote',wftVote,w.ansController,w.subController]);
     gmMS.FastOPRData.candidates.push(wftVote);
     gmMS.saveStatistics(wftVote);
     gmMS.saveDB();
-
-}
+};
 
 gmMS.saveStatistics = function (wftVote) {
     gmMS.toConsole('saveStatistics',debugConfig.functionName);
@@ -150,5 +122,4 @@ gmMS.saveStatistics = function (wftVote) {
         gmMS.FastOPRData.statistics[lastRecord].resume[7] += 1;
         console.log(['edit',wftVote.vote,gmMS.FastOPRData.statistics[lastRecord]]);
     }
-}
-
+};
