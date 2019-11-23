@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.2.20191016.001
+// @version      0.0.4.20191123.004
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
@@ -53,7 +53,6 @@ var debugConfig = (typeof debugConfig == 'undefined' ? {} : debugConfig);
 // Imported to functions.js
 
 /* ------------------- Local Storage         -------------------------------- */
-gmMS.localDBTables = [ 'statistics', 'history', 'candidates', 'customExtra', 'editCache'];
 
 gmMS.newStorageJSON = function (name) {
   //gmMS.toConsole(`newStorageJSON ${name}`,debugConfig.functionName);
@@ -63,18 +62,78 @@ gmMS.newStorageJSON = function (name) {
 };
 
 gmMS.saveStorageJSON = function (name) {
-  gmMS.toConsole(`saveStorageJSON ${name}`,debugConfig.functionName);
-  localStorage.setItem(name, JSON.stringify(FastOPRData[name]));
+  //gmMS.toConsole(`saveStorageJSON ${name}/${gmMS.FastOPRData[name].length}`,debugConfig.functionName);
+  localStorage.setItem(name, JSON.stringify(gmMS.FastOPRData[name]));
+  //console.log([`Debug ${name}`,gmMS.FastOPRData[name]]);
 }
 
 gmMS.saveDB = function () {
   gmMS.localDBTables.forEach(gmMS.saveStorageJSON);
-  gmMS.toConsole(`DB Saved. Number of records in ${name} cache - ${gmMS.FastOPRData[name].length}`,true,'background: #220; color: #bada55');
+  gmMS.toConsole(`DB Saved.`,true,'background: #220; color: #bada55');
+}
+
+gmMS.initStatistic = function (date) {
+    // Edits in resume[7]
+    gmMS.FastOPRData.statistics.push ({'date': date, 'voteInvalid': 0, 'voteDuplicate': 0, 'voteValid': 0, 'voteEdit': 0, 'resume': [0,0,0,0,0,0,0,0]});
+//    console.log(['debug statistics',gmMS.FastOPRData.statistics,gmMS.FastOPRData.statistics[gmMS.date]]);
 }
 
 gmMS.initDB = function (){
-  gmMS.toConsole(`initDB ${name}`,debugConfig.functionName);
-  gmMS.localDBTables.forEach(gmMS.newStorageJSON);
+    gmMS.toConsole(`initDB ${name}`,debugConfig.functionName);
+    gmMS.localDBTables = [ 'statistics', 'history', 'candidates', 'customExtra', 'editCache'];
+    gmMS.localDBTables.forEach(gmMS.newStorageJSON);
+    let statisticCount = gmMS.FastOPRData.statistics.length;
+    gmMS.today = new Date();
+    gmMS.date = gmMS.today.getFullYear()+'-'+(gmMS.today.getMonth()+1)+'-'+gmMS.today.getDate();
+    if (statisticCount == 0 || gmMS.FastOPRData.statistics[statisticCount-1] == undefined) {
+        gmMS.toConsole ('Init statistic database',true);
+        gmMS.initStatistic(gmMS.date);
+        gmMS.saveDB();
+    } else {
+        if (gmMS.FastOPRData.statistics[statisticCount-1].date != gmMS.date) {
+            gmMS.toConsole (`Init statistic for ${gmMS.date} - Total days in history: ${statisticCount}`,true);
+            gmMS.initStatistic(gmMS.date);
+            gmMS.saveDB();
+        } else {
+            gmMS.toConsole ('Statistic day already initialized',true);
+        }
+    }
+}
+
+gmMS.localCache = function (method) {
+    switch (method) {
+        case 'vote':
+            gmMS.tmpProfile = '';
+            console.log(w.subController.pageData);
+            $.get( "/profile", function( data ) {
+                // filter user id
+                let tmp = {};
+                tmp.userId = (/(?:\<img src=")(.*?)(?:" id)/gm).exec(data)[0];
+                tmp.userStatus = (/(?:<div class=")(.*?)(?:" id)/gm).exec(data)[0];
+                tmp.tmp = (/(?:<span class="stats-right">)(.*?)(?:<\/span>)/gm).exec(data);
+                console.log(tmp.tmp);
+                console.log(['userid',gmMS.FastOPRData.statistics]);
+
+                // filter vote statistics
+//                const regex = ;
+                //m = (/(?:\<div id="col-contain">)((?:.*\r?\n?)*)/gm).exec(data);
+                //console.log(m);
+                /*
+                while (m !== null) {
+                    // This is necessary to avoid infinite loops with zero-width matches
+                    if (m.index === regex.lastIndex) {
+                        regex.lastIndex++;
+                    }
+
+                    // The result can be accessed through the `m`-variable.
+                    m.forEach((match, groupIndex) => {
+                        console.log(`Found match, group ${groupIndex}: ${match}`);
+                    });
+                }*/
+                //               console.log([ "Profile data",data]);
+            });
+            break;
+    }
 }
 
 
@@ -122,6 +181,16 @@ gmMS.selectElements = function () {
 
 gmMS.changeScreen = function () {
     if (window.location.href.indexOf ("https://wayfarer.nianticlabs.com/captcha") != 0) {
+        // Statistcs
+        gmMS.moveObjects.topBar.insertAdjacentHTML("afterbegin", `<div id="twStatistics" width="100px"></div>`);
+        let badges = ["success","primary","info","warning","danger","outline-danger"]; //,"dark","secondary"
+        //let hints =  ["5* vote","secondary","success","danger","warning","info","light","dark"];
+        let stars = [5,4,3,2,1,0];
+        console.log(['aqui',gmMS.FastOPRData,gmMS.FastOPRData.statistics.length]);
+        let lastRecord = gmMS.FastOPRData.statistics.length-1;
+        for (var id in stars ) {
+            $('#twStatistics' ).html ($('#twStatistics' ).html()+`<span class="rounded-circle btn btn-${badges[id]} text-white" title="Total votes with ${stars[id]}*">${gmMS.FastOPRData.statistics[lastRecord].resume[stars[id]]}</span>`);
+        }
         // Hide original left bar
         gmMS.moveObjects.leftBar.classList.add('ng-hide');
         // Add Options to topBar
@@ -290,7 +359,8 @@ gmMS.setVote = function (vote, ele) {
         gmMS.moveObjects.whatIsInput.value = ele.getAttribute('whatis').replace("+", "").replace("-", "").replace("_", " ");
         gmMS.moveObjects.whatIsInput.focus();
         gmMS.forceEvent(gmMS.moveObjects.whatIsInput,"change");
-        var firstWhatIs = document.querySelector('#WhatIsItController.ng-scope div.card__body div.categories-display div.categories-display-container ul.ng-scope li.whatCategory div.categories-display-name.ng-binding');
+        var firstWhatIs = document.querySelector('div#WhatIsItController.ng-scope div.card__body div.categories-display div.categories-display-container ul.ng-scope li.category div.category__display-name.ng-binding');
+                                             //
         gmMS.forceEvent(firstWhatIs,"click");
 
         //console.log(firstWhatIs.childNodes);
@@ -299,11 +369,11 @@ gmMS.setVote = function (vote, ele) {
         //html.ng-scope.hydrated body.is-authenticated div.main-container div#content-container.container section div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-valid.ng-dirty.ng-valid-parse.ng-submitted div div.card-area div.card-row-container div#what-is-it-card.card.card--expand.what-is-it-card div#WhatIsItController.ng-scope div.card__body div.categories-display div.categories-display-container ul.ng-scope li.whatCategory div.categories-display-name.ng-binding
     }
     w.ansController.readyToSubmit();
+    gmMS.localCache('vote');
 };
 
 gmMS.limitToSubmit = function () {
-    let date = new Date(w.subController.countdownDate - (new Date().getTime())-60000);
-    //let hours = date.getHours();
+    let date = new Date(w.subController.pageData.expires - (new Date().getTime())-60000);
     let minutes = "0" + date.getMinutes();
     let seconds = "0" + date.getSeconds();
     return minutes.substr(-2) + ':' + seconds.substr(-2);
@@ -355,7 +425,7 @@ gmMS.setLimitInfo = function () {
 }
 
 gmMS.autoNext = function () {
-    if (gmMS.options) {
+    if (gmMS.options && gmMS.options.autoNext) {
         setTimeout(function () {
             console.log('AutoNext!');
             window.location.reload(true);
@@ -397,7 +467,7 @@ gmMS.getAngular = function (retry) {
             w.subController = w.$scope(descriptionDiv).subCtrl;
             if (w.subController.map !== undefined) {
                 console.log(['controlers',w.ansController,w.subController]);
-                gmMS.initDB();
+                //gmMS.initDB();
                 gmMS.openFirstCheck();
                 // Hooks
                 w.subController.twCreateStreetView = w.subController.createStreetView;
@@ -420,6 +490,7 @@ gmMS.getAngular = function (retry) {
                 w.ansController.twOpenSubmissionCompleteModal = w.ansController.openSubmissionCompleteModal;
                 w.ansController.openSubmissionCompleteModal = function () {
                     console.log('Next Portal Dialog');
+                    gmMS.saveVote();
                     w.ansController.twOpenSubmissionCompleteModal();
                     gmMS.autoNext();
                 }
@@ -439,8 +510,17 @@ gmMS.getAngular = function (retry) {
                 w.ansController.showLowQualityModal = function () {
                     console.log(`One Star Dialog`);
                     setTimeout(function () {
-                        let btnRefuse = document.querySelector('html.ng-scope.hydrated body.is-authenticated.modal-open div.modal.fade.ng-isolate-scope.in div.modal-dialog.modal-custom1 div.modal-content div#low-quality-modal.ng-scope div.modal-body.modal-body-accordion div.button-container button.button-primary');
+                        let btnRefuse = document.querySelector('div#low-quality-modal.low-quality-modal.ng-scope div.modal-body.modal-body-accordion div.button-container button.button-primary');
+                                                             //'html.ng-scope.hydrated body.is-authenticated.modal-open div.modal.fade.ng-isolate-scope.in div.modal-dialog.modal-custom1 div.modal-content div#low-quality-modal.ng-scope div.modal-body.modal-body-accordion div.button-container button.button-primary');
                         w.$scope(btnRefuse).answerCtrl2.openSubmissionCompleteModal = w.ansController.openSubmissionCompleteModal;
+                        // Hook for detect lowQuality submission
+                        console.log(`One Star Dialog submission hook`);
+                        w.$scope(btnRefuse).answerCtrl2.twConfirmLowQuality = w.$scope(btnRefuse).answerCtrl2.confirmLowQuality;
+                        w.$scope(btnRefuse).answerCtrl2.confirmLowQuality = function () {
+                            console.log([`Form Submission low quality`]);
+                           // gmMS.saveVote();
+                            w.$scope(btnRefuse).answerCtrl2.twConfirmLowQuality();
+                        }
                         $('#sub-group-2').click();
                         setTimeout(function () {$('#MISMATCH').click();},200);
                         //gmMS.forceEvent(mismatchOption,'click');
@@ -451,7 +531,8 @@ gmMS.getAngular = function (retry) {
                 // Hook for detect submission
                 w.ansController.twSubmitForm = w.ansController.submitForm;
                 w.ansController.submitForm = function (compat) {
-                    console.log(`Form Submission`);
+                    console.log([`Form Submission`,compat]);
+                    //gmMS.saveVote();
                     w.ansController.twSubmitForm(compat);
                 }
                 //console.log([w.ansController,w.subController]);
@@ -526,11 +607,66 @@ gmMS.shortCuts = function () {
     };
 };
 
+gmMS.saveVote = function() {
+    gmMS.toConsole('saveVote',debugConfig.functionName);
+    let fullVote = w.subController.pageData;
+    let wftVote = {
+        'reviewType': w.subController.reviewType,
+        'description': fullVote.description,
+        'imageUrl': fullVote.imageUrl,
+        'supportingImageUrl': fullVote.supportingImageUrl,
+        'lat': fullVote.lat,
+        'lng': fullVote.lng,
+        'statement': fullVote.statement,
+        'title': fullVote.title,
+        'edit': {
+            'descriptions': fullVote.descriptionEdits,
+            'locations': fullVote.locationEdits,
+        },
+        'vote': {
+            'quality': w.ansController.formData.quality,
+            'description': w.ansController.formData.description,
+            'cultural': w.ansController.formData.cultural,
+            'uniqueness': w.ansController.formData.uniqueness,
+            'safety': w.ansController.formData.safety,
+            'location': w.ansController.formData.location,
+        }
+    };
+    console.clear();
+    //console.log(['wftVote',wftVote,w.ansController,w.subController]);
+    gmMS.FastOPRData.candidates.push(wftVote);
+    gmMS.saveStatistics(wftVote);
+    gmMS.saveDB();
+/*
+
+expires: 1573948178254
+nearbyPortals: Array [ {…}, {…} ]
+newLocationMaxDistance: 3000
+streetAddress: ""
+t1: 0.5
+*/
+    //console.log(["subController.pageData", wftVote]);
+}
+
+gmMS.saveStatistics = function (wftVote) {
+    gmMS.toConsole('saveStatistics',debugConfig.functionName);
+    let lastRecord = gmMS.FastOPRData.statistics.length-1;
+    if (wftVote.reviewType == "NEW") {
+//        gmMS.FastOPRData.statistics[lastRecord].resume = [0,0,0,0,0,0,0];
+        gmMS.FastOPRData.statistics[lastRecord].resume[(wftVote.vote.quality == "" ? 0 : wftVote.vote.quality)] += 1;
+        console.log(['new vote',wftVote.vote,gmMS.FastOPRData.statistics[lastRecord]]);
+    } else {
+        gmMS.FastOPRData.statistics[lastRecord].resume[7] += 1;
+        console.log(['edit',wftVote.vote,gmMS.FastOPRData.statistics[lastRecord]]);
+    }
+}
+
 gmMS.init = function () {
     gmMS.toConsole('Start script...');
-
     gmMS.loadCSS('fontawesome','https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
+    gmMS.loadCSS('fontawesome','https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css');
     gmMS.loadCSS(gmMS.ScriptName,`${gmMS.baseURL}${gmMS.ScriptName}.css?a=${GM_info.script.version}`);
+    gmMS.initDB();
     gmMS.selectElements();
 };
 
@@ -560,6 +696,8 @@ gmMS.init = function () {
         gmMS.hideObject(arkCookie[0]);
     }
     gmMS.init ();
+    // Temporary disable autoNext
+    gmMS.options.autoNext = false;
 })();
 /*
 
