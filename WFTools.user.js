@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.4.20191123.010
+// @version      0.0.4.20191124.001
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
@@ -362,9 +362,11 @@ gmMS.init = function () {
     gmMS.loadCSS(gmMS.ScriptName,`${gmMS.baseURL}${gmMS.ScriptName}.css?a=${GM_info.script.version}8`);
     gmMS.initDB();
     gmMS.selectElements();
-    if (gmMS.FastOPRData.options !== []) {
-        gmMS.options = gmMS.FastOPRData.options;
+    console.log(['debug',typeof gmMS.FastOPRData.options,gmMS.FastOPRData.options]);
+    if (typeof gmMS.FastOPRData.options == "object" && gmMS.FastOPRData.options.length == 0) {
+        gmMS.FastOPRData.options = gmMS.options;
     }
+    gmMS.options = gmMS.FastOPRData.options;
 };
 
 gmMS.addPopUp = function () {
