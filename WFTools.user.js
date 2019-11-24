@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.4.20191123.009
+// @version      0.0.4.20191123.010
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
@@ -362,7 +362,9 @@ gmMS.init = function () {
     gmMS.loadCSS(gmMS.ScriptName,`${gmMS.baseURL}${gmMS.ScriptName}.css?a=${GM_info.script.version}8`);
     gmMS.initDB();
     gmMS.selectElements();
-    gmMS.options = gmMS.FastOPRData.options;
+    if (gmMS.FastOPRData.options !== []) {
+        gmMS.options = gmMS.FastOPRData.options;
+    }
 };
 
 gmMS.addPopUp = function () {
@@ -383,7 +385,7 @@ gmMS.addPopUp = function () {
     Timeout to submit vote
   </label>
 </div>
-  <div id="twProgress" style="width: 100%; background-color: green;" ></div>
+  <div id="twProgress" style="width: 100%; color: green;" ></div>
   </div>
 </div>`);
     /*
@@ -402,8 +404,9 @@ gmMS.addPopUp = function () {
         //$('#twProgress').attr('aria-valuenow',totalVotes);
         $( "#twProgress" ).progressbar({
             value: totalVotes,
-            classes: 'bg-'+(totalVotes < 20 ? 'danger' : (totalVotes < 50 ? 'warning' : (totalVotes < 80 ? 'info' : 'success')))
+            //classes: 'bg-'+(totalVotes < 20 ? 'danger' : (totalVotes < 50 ? 'warning' : (totalVotes < 80 ? 'info' : 'success')))
         });
+        $( "#twProgress > div").css({ 'background': (totalVotes < 20 ? 'red' : (totalVotes < 50 ? 'orange' : (totalVotes < 80 ? 'cyan' : 'green'))) })
         //$('#twProgress').addClass('bg-'+(totalVotes < 20 ? 'danger' : (totalVotes < 50 ? 'warning' : (totalVotes < 80 ? 'info' : 'success'))));
         $('#twProgress')[0].title = `Vote count for today: ${totalVotes}`;
         console.log(['fim',gmMS.options]);
