@@ -2,7 +2,7 @@
 // @id           WFTools@everyz.com
 // @name         WFTools
 // @author       rRuleZ | rRuleZ@everyz.org
-// @version      0.0.4.20191123.008
+// @version      0.0.4.20191123.009
 // @description  WFTools: One Script for aprove All VALID portals
 // @include      https://wayfarer.nianticlabs.com/*
 // @match        https://wayfarer.nianticlabs.com/*
@@ -63,7 +63,22 @@ var debugConfig = (typeof debugConfig == 'undefined' ? {} : debugConfig);
 // Imported to interface.js
 
 gmMS.selectEditElements = function () {
-    //gmMS.moveObjects.votePhoto = document.querySelector('div#NewSubmissionController.ng-scope div div div#AnswersController.ng-scope form.ng-valid.ng-dirty div div.card-area div.edit-container');
+    gmMS.toConsole('selectEditElements',debugConfig.functionName);
+    gmMS.moveObjects.editDivSubmit = document.querySelector('div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.answer-btn-container.bottom-btns');
+    gmMS.moveObjects.editDivMapSelected = document.querySelector('div#AnswersController.ng-scope form.ng-valid.ng-dirty div div.card-area div.edit-container div.known-information-card-container div.known-information-card.card.card--information.card--expand div.card__body div.known-information-group div.known-information.known-information__map');
+    gmMS.moveObjects.editDivDescriptionSelected = document.querySelector('div#AnswersController.ng-scope form.ng-valid.ng-dirty div div.card-area div.edit-container div.known-information-card-container div.known-information-card.card.card--information.card--expand div.card__body div.known-information-group div.known-information.known-information__description');
+    gmMS.moveObjects.editDivDescription = document.querySelector('div#AnswersController.ng-scope form.ng-valid.ng-dirty div div.card-area div.edit-container div.card-row-container div.card.card--expand');
+    gmMS.moveObjects.editDivLocation = document.querySelector('div#AnswersController.ng-scope form.ng-valid.ng-dirty div div.card-area div.edit-container div.card-row-container div.card.card--expand.map-card.map-edit-card');
+    gmMS.moveObjects.editDivTitle = document.querySelector('div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.edit-container div.card-row-container div.card.card--expand');
+    gmMS.moveObjects.editDivComments = document.querySelector('div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.edit-container div.card-row-container div.card.card--expand.comments-card');
+    gmMS.moveObjects.editDivWhatIs = document.querySelector('div#AnswersController.ng-scope form.ng-pristine.ng-valid div div.card-area div.edit-container div.card-row-container div.card.card--expand.what-is-it-card');
+    // Move elements
+    gmMS.moveObjects.editDivWhatIs.children[0].appendChild (gmMS.moveObjects.editDivComments.children[0].children[0]);
+    gmMS.moveObjects.editDivWhatIs.children[0].appendChild (gmMS.moveObjects.editDivComments.children[1]);
+    gmMS.hideObject(gmMS.moveObjects.editDivComments);
+    // Set Map Options
+    gmMS.setMapOptions('location-edit-map');
+
 }
 
 /* ------------------- Integration Functions -------------------------------- */
@@ -271,6 +286,12 @@ gmMS.getAngular = function (retry) {
 //                console.log(targetNode);
                 //gmMS.observer.observe(targetNode[0], config);
                 gmMS.addPopUp();
+                console.log(['edit',w.subController.pageData]);
+                if (w.subController.reviewType == "EDIT") {
+                    setTimeout(function () {
+                        gmMS.selectEditElements();
+                    }, 500);
+                }
             } else {
                 gmMS.toConsole("Angular not ready", true);
                 setTimeout(function () {
@@ -338,7 +359,7 @@ gmMS.init = function () {
     gmMS.loadCSS('fontawesome','https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css');
     //gmMS.loadCSS('bootstrap','https://getbootstrap.com/docs/4.0/dist/css/bootstrap.min.css');
     gmMS.loadCSS('jqueryui','https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css');
-    gmMS.loadCSS(gmMS.ScriptName,`${gmMS.baseURL}${gmMS.ScriptName}.css?a=${GM_info.script.version}3`);
+    gmMS.loadCSS(gmMS.ScriptName,`${gmMS.baseURL}${gmMS.ScriptName}.css?a=${GM_info.script.version}8`);
     gmMS.initDB();
     gmMS.selectElements();
     gmMS.options = gmMS.FastOPRData.options;
@@ -348,7 +369,7 @@ gmMS.addPopUp = function () {
     gmMS.toConsole('addPopUp',debugConfig.functionName);
     let body = document.getElementsByTagName("BODY")[0];
 
-    body.insertAdjacentHTML("beforeend", `<div id="twDialog" title="Basic dialog">
+    body.insertAdjacentHTML("beforeend", `<div id="twDialog" title="WFTools options">
   <div class="twDialogInfo">
 <div class="form-check">
   <input class="form-check-input" type="checkbox" value="" id="twAutoNext">
@@ -356,10 +377,36 @@ gmMS.addPopUp = function () {
     Automatic go to next candidate
   </label>
 </div>
+<div class="form-check">
+  <input type="number" value="10" min="5" max="18" step="1" data-suffix="s" id="twVoteTimeout" style="width: 80px;"/>
+  <label class="form-check-label" for="twVoteTimeout">
+    Timeout to submit vote
+  </label>
+</div>
+  <div id="twProgress" style="width: 100%; background-color: green;" ></div>
   </div>
 </div>`);
+    /*
+<div class="progress">
+  <div class="progress-bar progress-bar-striped" role="progressbar" style="width: 100%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" id="twProgress"></div>
+</div>
+*/
     $( "#twDialog" ).on( "dialogopen", function( event, ui ) {
-        $('#twAutoNext').checked = gmMS.options.autoNext;
+        console.log(['inicio',gmMS.options]);
+        $('#twAutoNext')[0].checked = gmMS.options.autoNext;
+        $('#twVoteTimeout')[0].value = parseInt(gmMS.options.voteTimeout);
+        let statistic = gmMS.FastOPRData.statistics[gmMS.FastOPRData.statistics.length-1].resume;
+        console.log(statistic);
+        let totalVotes = (statistic[0]+statistic[1]+statistic[2]+statistic[3]+statistic[4]+statistic[5]);
+        console.log(['votos',totalVotes,(totalVotes < 20 ? 'danger' : (totalVotes < 50 ? 'warning' : (totalVotes < 80 ? 'info' : 'success')))]);
+        //$('#twProgress').attr('aria-valuenow',totalVotes);
+        $( "#twProgress" ).progressbar({
+            value: totalVotes,
+            classes: 'bg-'+(totalVotes < 20 ? 'danger' : (totalVotes < 50 ? 'warning' : (totalVotes < 80 ? 'info' : 'success')))
+        });
+        //$('#twProgress').addClass('bg-'+(totalVotes < 20 ? 'danger' : (totalVotes < 50 ? 'warning' : (totalVotes < 80 ? 'info' : 'success'))));
+        $('#twProgress')[0].title = `Vote count for today: ${totalVotes}`;
+        console.log(['fim',gmMS.options]);
     });
     document.getElementsByClassName('niantic-wayfarer-logo')[0].onclick = function() {
         $( "#twDialog" ).dialog({
@@ -370,14 +417,15 @@ gmMS.addPopUp = function () {
             buttons: {
                 "Save configuration": function() {
                     gmMS.options.autoNext = $('#twAutoNext')[0].checked;
+                    gmMS.options.voteTimeout = parseInt($('#twVoteTimeout')[0].value);
                     gmMS.FastOPRData.options = gmMS.options;
                     gmMS.saveDB();
                     console.log([gmMS.options,gmMS.FastOPRData.options]);
                     $( this ).dialog( "close" );
-                },
+                }/*,
                 Cancel: function() {
                     $( this ).dialog( "close" );
-                }
+                }*/
             }
         });
         return false;
